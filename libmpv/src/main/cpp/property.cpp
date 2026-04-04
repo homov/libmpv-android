@@ -8,18 +8,18 @@
 #include "globals.h"
 
 extern "C" {
-    jni_func(jint, setOptionString, jstring option, jstring value);
+    jni_func(jint, setOptionString, jstring joption, jstring jvalue);
 
-    jni_func(jobject, getPropertyInt, jstring property);
-    jni_func(void, setPropertyInt, jstring property, jstring value);
-    jni_func(jobject, getPropertyDouble, jstring property);
-    jni_func(void, setPropertyDouble, jstring property, jdouble value);
-    jni_func(jobject, getPropertyBoolean, jstring property);
-    jni_func(void, setPropertyBoolean, jstring property, jboolean value);
+    jni_func(jobject, getPropertyInt, jstring jproperty);
+    jni_func(void, setPropertyInt, jstring jproperty, jint jvalue);
+    jni_func(jobject, getPropertyDouble, jstring jproperty);
+    jni_func(void, setPropertyDouble, jstring jproperty, jdouble jvalue);
+    jni_func(jobject, getPropertyBoolean, jstring jproperty);
+    jni_func(void, setPropertyBoolean, jstring jproperty, jboolean jvalue);
     jni_func(jstring, getPropertyString, jstring jproperty);
     jni_func(void, setPropertyString, jstring jproperty, jstring jvalue);
 
-    jni_func(void, observeProperty, jstring property, jint format);
+    jni_func(void, observeProperty, jstring jproperty, jint jformat);
 }
 
 jni_func(jint, setOptionString, jstring joption, jstring jvalue) {
@@ -111,11 +111,11 @@ jni_func(void, setPropertyString, jstring jproperty, jstring jvalue) {
     env->ReleaseStringUTFChars(jvalue, value);
 }
 
-jni_func(void, observeProperty, jstring property, jint format) {
+jni_func(void, observeProperty, jstring jproperty, jint jformat) {
     CHECK_MPV_INIT();
-    const char *prop = env->GetStringUTFChars(property, NULL);
-    int result = mpv_observe_property(g_mpv, 0, prop, (mpv_format)format);
+    const char *prop = env->GetStringUTFChars(jproperty, NULL);
+    int result = mpv_observe_property(g_mpv, 0, prop, (mpv_format)jformat);
     if (result < 0)
-        ALOGE("mpv_observe_property(%s) format %d returned error %s", prop, format, mpv_error_string(result));
-    env->ReleaseStringUTFChars(property, prop);
+        ALOGE("mpv_observe_property(%s) format %d returned error %s", prop, jformat, mpv_error_string(result));
+    env->ReleaseStringUTFChars(jproperty, prop);
 }
