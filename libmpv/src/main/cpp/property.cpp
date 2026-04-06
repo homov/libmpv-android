@@ -24,8 +24,10 @@ extern "C" {
 
 jni_func(jint, nativeSetOptionString, jlong instance, jstring joption, jstring jvalue) {
     auto mpv_instance = reinterpret_cast<MPVInstance*>(instance);
-    if (!mpv_instance->mpv)
-        die("mpv is not initialized");
+    if (!mpv_instance->mpv) {
+        die(env, "mpv is not initialized");
+        return 0;
+    }
 
     const char *option = env->GetStringUTFChars(joption, nullptr);
     const char *value = env->GetStringUTFChars(jvalue, nullptr);
@@ -39,8 +41,10 @@ jni_func(jint, nativeSetOptionString, jlong instance, jstring joption, jstring j
 }
 
 static int common_get_property(JNIEnv *env, mpv_handle* mpv, jstring jproperty, mpv_format format, void *output) {
-    if (!mpv)
-        die("get_property called but mpv is not initialized");
+    if (!mpv) {
+        die(env, "get_property called but mpv is not initialized");
+        return -1;
+    }
 
     const char *prop = env->GetStringUTFChars(jproperty, nullptr);
     int result = mpv_get_property(mpv, prop, format, output);
@@ -52,8 +56,10 @@ static int common_get_property(JNIEnv *env, mpv_handle* mpv, jstring jproperty, 
 }
 
 static int common_set_property(JNIEnv *env, mpv_handle* mpv, jstring jproperty, mpv_format format, void *value) {
-    if (!mpv)
-        die("set_property called but mpv is not initialized");
+    if (!mpv) {
+        die(env, "set_property called but mpv is not initialized");
+        return -1;
+    }
 
     const char *prop = env->GetStringUTFChars(jproperty, nullptr);
     int result = mpv_set_property(mpv, prop, format, value);
@@ -125,8 +131,10 @@ jni_func(void, nativeSetPropertyString, jlong instance, jstring jproperty, jstri
 
 jni_func(void, nativeObserveProperty, jlong instance, jstring jproperty, jint jformat) {
     auto mpv_instance = reinterpret_cast<MPVInstance*>(instance);
-    if (!mpv_instance->mpv)
-        die("mpv is not initialized");
+    if (!mpv_instance->mpv) {
+        die(env, "mpv is not initialized");
+        return;
+    }
 
     const char *prop = env->GetStringUTFChars(jproperty, nullptr);
     int result = mpv_observe_property(mpv_instance->mpv, 0, prop, (mpv_format)jformat);

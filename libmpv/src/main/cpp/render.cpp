@@ -15,8 +15,10 @@ jni_func(void, nativeAttachSurface, jlong instance, jobject surface) {
     auto mpv_instance = reinterpret_cast<MPVInstance*>(instance);
 
     mpv_instance->surface = env->NewGlobalRef(surface);
-    if (!mpv_instance->surface)
-        die("invalid surface provided");
+    if (!mpv_instance->surface) {
+        die(env, "invalid surface provided");
+        return;
+    }
 
     int64_t wid = reinterpret_cast<intptr_t>(mpv_instance->surface);
     int result = mpv_set_option(mpv_instance->mpv, "wid", MPV_FORMAT_INT64, &wid);

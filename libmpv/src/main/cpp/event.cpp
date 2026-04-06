@@ -67,8 +67,10 @@ void *event_thread(void *arg) {
     auto instance = static_cast<MPVInstance*>(arg);
     JNIEnv *env = nullptr;
     acquire_jni_env(instance->vm, &env);
-    if (!env)
-        die("failed to acquire java env");
+    if (!env) {
+        ALOGE("failed to acquire java env");
+        return nullptr;
+    }
 
     while (true) {
         mpv_event *mp_event;

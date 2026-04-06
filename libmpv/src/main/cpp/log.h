@@ -1,6 +1,7 @@
 #pragma once
 
 #include <android/log.h>
+#include <jni.h>
 
 #define DEBUG 1
 
@@ -12,4 +13,5 @@
 #define ALOGV(...) (void)0
 #endif
 
-__attribute__((noreturn)) void die(const char *msg);
+void die(JNIEnv *env, const char *msg);
+void throw_java_exception(JNIEnv *env, const char *msg);

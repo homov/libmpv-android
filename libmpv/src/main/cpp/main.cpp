@@ -61,15 +61,21 @@ jni_func(jlong, nativeCreate, jobject thiz, jobject appctx) {
 
 jni_func(void, nativeInit, jlong instance) {
     auto mpv_instance = reinterpret_cast<MPVInstance*>(instance);
-    if (!mpv_instance->mpv)
-        die("mpv is not created");
+    if (!mpv_instance->mpv) {
+        die(env, "mpv is not created");
+        return;
+    }
 
-    if (mpv_initialize(mpv_instance->mpv) < 0)
-        die("mpv init failed");
+    if (mpv_initialize(mpv_instance->mpv) < 0) {
+        die(env, "mpv init failed");
+        return;
+    }
 
     mpv_instance->event_thread_request_exit = false;
-    if (pthread_create(&mpv_instance->event_thread_id, nullptr, event_thread, mpv_instance) != 0)
-        die("thread create failed");
+    if (pthread_create(&mpv_instance->event_thread_id, nullptr, event_thread, mpv_instance) != 0) {
+        die(env, "thread create failed");
+        return;
+    }
     pthread_setname_np(mpv_instance->event_thread_id, "event_thread");
 }
 

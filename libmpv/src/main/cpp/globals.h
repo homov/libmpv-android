@@ -15,6 +15,4 @@ struct MPVInstance {
     jobject javaObject;
     jobject appCtx;
     jobject surface;
-
-    bool methods_initialized;
 };
